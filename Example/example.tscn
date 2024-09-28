@@ -1,14 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://bwh7j74s86p7w"]
 
-[ext_resource type="PackedScene" uid="uid://brbpad4i1xetj" path="res://src/JoyStick.tscn" id="1_q8osb"]
-[ext_resource type="Script" path="res://Example/example.gd" id="1_v7iis"]
-[ext_resource type="Texture2D" uid="uid://csde5fnjmx4w3" path="res://icon.svg" id="3_1csac"]
+[ext_resource type="Script" path="res://Example/Example.gd" id="1_7afs4"]
+[ext_resource type="PackedScene" uid="uid://brbpad4i1xetj" path="res://Joystick/JoyStick.tscn" id="2_2iluk"]
+[ext_resource type="Texture2D" uid="uid://csde5fnjmx4w3" path="res://icon.svg" id="3_ipg03"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vi7o4"]
 size = Vector2(128, 128)
 
 [node name="Example" type="Node2D"]
-script = ExtResource("1_v7iis")
+script = ExtResource("1_7afs4")
 
 [node name="MoveLabel" type="Label" parent="."]
 offset_left = 1025.0
@@ -17,7 +17,7 @@ offset_right = 1077.0
 offset_bottom = 633.0
 text = "Move"
 
-[node name="JoyStickDirection" parent="." instance=ExtResource("1_q8osb")]
+[node name="JoyStickDirection" parent="." instance=ExtResource("2_2iluk")]
 position = Vector2(980, 470)
 
 [node name="RotateLabel" type="Label" parent="."]
@@ -27,7 +27,7 @@ offset_right = 872.0
 offset_bottom = 633.0
 text = "Rotate"
 
-[node name="JoyStickAngle" parent="." instance=ExtResource("1_q8osb")]
+[node name="JoyStickAngle" parent="." instance=ExtResource("2_2iluk")]
 position = Vector2(780, 470)
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
@@ -37,7 +37,7 @@ position = Vector2(345, 281)
 shape = SubResource("RectangleShape2D_vi7o4")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-texture = ExtResource("3_1csac")
+texture = ExtResource("3_ipg03")
 
 [connection signal="joystick_direction" from="JoyStickDirection" to="." method="_on_joy_stick_direction_joystick_direction"]
 [connection signal="joystick_angle" from="JoyStickAngle" to="." method="_on_joy_stick_angle_joystick_angle"]

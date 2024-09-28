@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccjmlg4pd4up4"
-path="res://.godot/imported/ring.png-2a3fa8cf88c7986a76ee1a40a13f6179.ctex"
+uid="uid://fyqpxtcpjwb4"
+path="res://.godot/imported/knob.png-2f01c65957b2f9342f08901c1ff4d040.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://texture/ring.png"
-dest_files=["res://.godot/imported/ring.png-2a3fa8cf88c7986a76ee1a40a13f6179.ctex"]
+source_file="res://Joystick/texture/knob.png"
+dest_files=["res://.godot/imported/knob.png-2f01c65957b2f9342f08901c1ff4d040.ctex"]
 
 [params]
 
