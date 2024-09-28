@@ -3,16 +3,16 @@
 A joystick for general or grid based movement.<br />
 The joystick supports 8 directional and 4 directional movement.
 
-# Add to Project
+## Add to Project
 
 - Copy the Joystick folder into your exiting project
 - Add the joystick as a scene or a node
 
 ![Screenshot 2024-09-28 183934](https://github.com/user-attachments/assets/620a13d5-a07b-4728-96f6-c6db2dc5b7de)
 
-# How to Use
+## How to Use
 
-Signals:<br />
+### Signals
 
 joystick_direction(direction_8: Vector2, direction_4: Vector2, direction: Vector2)<br />
 
@@ -26,7 +26,7 @@ angle_8 to get the angle in 8 directional movement<br />
 angle_4 to get the angle in 4 directional movement<br />
 angle to get the angle in general movement<br />
 
-Methods:<br />
+### Methods
 
 get_direction_8()<br />
 Get the direction for 8 directional movement<br />
@@ -36,3 +36,15 @@ Get the direction for 4 directional movement<br />
 
 get_direction()<br />
 Get the general direction for general movement<br />
+
+get_angle_8()<br />
+Get the angle for 8 directional movement<br />
+
+get_angle_4()<br />
+Get the angle for 4 directional movement<br />
+
+get_angle()<br />
+Get the angle for general movement<br />
+
+check_threshold()<br />
+Check if the knob's distance from the center is greater than the threshold
