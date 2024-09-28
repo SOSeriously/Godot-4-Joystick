@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwh7j74s86p7w"]
+
+[ext_resource type="PackedScene" uid="uid://brbpad4i1xetj" path="res://src/JoyStick.tscn" id="1_q8osb"]
+[ext_resource type="Script" path="res://Example/example.gd" id="1_v7iis"]
+[ext_resource type="Texture2D" uid="uid://csde5fnjmx4w3" path="res://icon.svg" id="3_1csac"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vi7o4"]
+size = Vector2(128, 128)
+
+[node name="Example" type="Node2D"]
+script = ExtResource("1_v7iis")
+
+[node name="MoveLabel" type="Label" parent="."]
+offset_left = 1025.0
+offset_top = 610.0
+offset_right = 1077.0
+offset_bottom = 633.0
+text = "Move"
+
+[node name="JoyStickDirection" parent="." instance=ExtResource("1_q8osb")]
+position = Vector2(980, 470)
+
+[node name="RotateLabel" type="Label" parent="."]
+offset_left = 820.0
+offset_top = 610.0
+offset_right = 872.0
+offset_bottom = 633.0
+text = "Rotate"
+
+[node name="JoyStickAngle" parent="." instance=ExtResource("1_q8osb")]
+position = Vector2(780, 470)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(345, 281)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("RectangleShape2D_vi7o4")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+texture = ExtResource("3_1csac")
+
+[connection signal="joystick_direction" from="JoyStickDirection" to="." method="_on_joy_stick_direction_joystick_direction"]
+[connection signal="joystick_angle" from="JoyStickAngle" to="." method="_on_joy_stick_angle_joystick_angle"]
