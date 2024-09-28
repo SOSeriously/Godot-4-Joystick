@@ -3,7 +3,7 @@
 A joystick for general or grid based movement.
 The joystick supports 8 directional and 4 directional movement.
 
-# Add to Project:
+# Add to Project
 
 - Copy the Joystick folder into your exiting project
 - Add the joystick as a scene or a node
