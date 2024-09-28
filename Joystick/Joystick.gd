@@ -1,47 +1,53 @@
 @tool
 class_name JoyStickInput
 extends TouchScreenButton
-
 ## A general joystick for normal and grid based movement.
 
-signal joystick_direction(direction_8: Vector2, direction_4: Vector2, direction: Vector2) 
+## Emitted when the knob is dragged.[br]
+## Use [code]direction_8[/code] for 8 directional movement.[br]
+## Use [code]direction_4[/code] for 4 directional movement.[br]
+## Use [code]direction[/code] for general movement.
+signal joystick_direction(direction_8: Vector2, direction_4: Vector2, direction: Vector2)
+## Emitted when the knob is dragged.[br]
+## Use [code]angle_8[/code] to get the angle in 8 directional movement.[br]
+## Use [code]angle_4[/code] to get the angle in 4 directional movement.[br]
+## Use [code]direction[/code] to get the angle in general movement.
 signal joystick_angle(angle_8: int, angle_4: int, angle: float)
 
-enum angles_8 {
-	NONE = -1,
-	RIGHT = 0,
-	DOWN_RIGHT = 1,
-	DOWN = 2,
-	DOWN_LEFT = 3,
-	LEFT = 4,
-	UP_LEFT = 5,
-	UP = 6,
-	UP_RIGHT = 7,
+enum angles_8 { ## Enum used for 8 directional movement.
+	NONE = -1, ## No input.
+	RIGHT = 0, ## Move to the RIGHT.
+	DOWN_RIGHT = 1,## Move DOWN and RIGHT.
+	DOWN = 2, ## Move DOWN.
+	DOWN_LEFT = 3, ## Move DOWN and LEFT.
+	LEFT = 4, ## Move LEFT.
+	UP_LEFT = 5, ## Move UP and LEFT.
+	UP = 6, ## Move UP.
+	UP_RIGHT = 7, ## Move UP and RIGHT.
 }
 
-enum angles_4 {
-	NONE = -1,
-	RIGHT = 0,
-	DOWN = 1,
-	LEFT = 2,
-	UP = 3,
+enum angles_4 { ## Enum used for 4 directional movement.
+	NONE = -1, ## No input.
+	RIGHT = 0, ## Move RIGHT.
+	DOWN = 1, ## Move DOWN.
+	LEFT = 2, ## Move LEFT.
+	UP = 3, ## Move UP.
 }
 
-
-@export var threshold: int = 10
-@export var recenter_on_pause: bool = true ## Recenters the knob when get_tree().paused = true
+@export var threshold: int = 10 ## The knob's distance from the center must be greater than the [code]threshold[/code] before the direction and angle are updated.
+@export var recenter_on_pause: bool = true ## Recenters the knob when get_tree().paused = true.
 @export_category("Knob")
-@export var knob: Sprite2D
-@export var knob_texture: Texture2D:
+@export var knob: Sprite2D ## The joystick's knob.
+@export var knob_texture: Texture2D: ## The knob's texture.
 	set(value):
 		knob_texture = value
 		if is_instance_valid(knob):
 			knob.texture = value
 	get(): return knob_texture
 
-var max_length: int = 0
-var stick_center: Vector2 = Vector2.ZERO
-var pressing: bool = false
+var max_length: int = 0 ## The radius of the joystick's shape.
+var stick_center: Vector2 = Vector2.ZERO ## The knob's center position.
+var pressing: bool = false ## Set when the joystick is pressed.
 
 func _ready() -> void:
 	pressed.connect(_on_pressed)
@@ -76,12 +82,14 @@ func _process(_delta: float) -> void:
 			joystick_direction.emit(get_direction_8(), get_direction_4(), get_direction())
 			joystick_angle.emit(get_angle_8(), get_angle_4(), get_angle())
 
+## Get the general direction for general movement.
 func get_direction() -> Vector2:
 	if check_threshold():
 		var dir: Vector2 = knob.position - stick_center
 		return dir.normalized()
 	return Vector2.ZERO
 
+## Get the direction for 8 directional movement.
 func get_direction_8() -> Vector2:
 	if check_threshold():
 		match get_angle_8():
@@ -103,6 +111,7 @@ func get_direction_8() -> Vector2:
 				return Vector2.UP + Vector2.LEFT
 	return Vector2.ZERO
 
+## Get the direction for 4 directional movement.
 func get_direction_4() -> Vector2:
 	if check_threshold():
 		match get_angle_4():
@@ -116,12 +125,15 @@ func get_direction_4() -> Vector2:
 				return Vector2.LEFT
 	return Vector2.ZERO
 
+## Get the angle for general movement.[br]
+## get_angle() is the same as [code](knob.position - stick_center).angle()[/code]
 func get_angle() -> float:
 	if check_threshold():
 		var dir: Vector2 = knob.position - stick_center
 		return dir.angle()
 	return angles_8.NONE
 
+## Get the angle for 8 directional movement.
 func get_angle_8() -> int:
 	if check_threshold():
 		var dir: Vector2 = knob.position - stick_center
@@ -130,6 +142,7 @@ func get_angle_8() -> int:
 		return angle
 	return angles_8.NONE
 
+## Get the angle for 4 directional movement.
 func get_angle_4() -> int:
 	if check_threshold():
 		var dir: Vector2 = knob.position - stick_center
@@ -138,6 +151,7 @@ func get_angle_4() -> int:
 		return angle
 	return angles_4.NONE
 
+## Check if the knob's distance from the center is greater than the [code]threshold[/code].
 func check_threshold() -> bool:
 	return knob.position.distance_to(stick_center) > threshold
 
