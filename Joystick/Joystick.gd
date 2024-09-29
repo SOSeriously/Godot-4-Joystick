@@ -34,7 +34,7 @@ enum angles_4 { ## Enum used for 4 directional movement.
 	UP = 3, ## Move UP.
 }
 
-@export var threshold: int = 10 ## The knob's distance from the center must be greater than the [code]threshold[/code] before the direction and angle are updated.
+@export var deadzone: float = 10 ## The knob's distance from the center must be greater than the [code]threshold[/code] before the direction and angle are updated.
 @export var recenter_on_pause: bool = true ## Recenters the knob when get_tree().paused = true.
 @export_category("Knob")
 @export var knob: Sprite2D ## The joystick's knob.
@@ -45,21 +45,21 @@ enum angles_4 { ## Enum used for 4 directional movement.
 			knob.texture = value
 	get(): return knob_texture
 
-var max_length: int = 0 ## The radius of the joystick's shape.
-var stick_center: Vector2 = Vector2.ZERO ## The knob's center position.
-var pressing: bool = false ## Set when the joystick is pressed.
+var _joystick_radius: int = 0 ## The radius of the joystick's shape.
+var _stick_center: Vector2 = Vector2.ZERO ## The knob's center position.
+var _pressing: bool = false ## Set when the joystick is pressed.
 
 func _ready() -> void:
 	pressed.connect(_on_pressed)
 	released.connect(_on_released)
 	
-	max_length = shape.radius
-	stick_center = texture_normal.get_size() / 2
+	_joystick_radius = shape.radius
+	_stick_center = texture_normal.get_size() / 2
 	set_process(false)
 	
 	if not knob:
 		knob =  Sprite2D.new()
-		knob.position = stick_center
+		knob.position = _stick_center
 		add_child(knob)
 	
 	if knob_texture:
@@ -71,12 +71,12 @@ func _input(event: InputEvent) -> void:
 			set_process(true)
 		elif not event.pressed:
 			set_process(false)
-			knob.position = stick_center
+			knob.position = _stick_center
 
 func _process(_delta: float) -> void:
-	if pressing:
+	if _pressing:
 		knob.global_position = get_global_mouse_position()
-		knob.position = stick_center + (knob.position - stick_center).limit_length(max_length)
+		knob.position = _stick_center + (knob.position - _stick_center).limit_length(_joystick_radius)
 		
 		if is_processing():
 			joystick_direction.emit(get_direction_8(), get_direction_4(), get_direction())
@@ -85,7 +85,7 @@ func _process(_delta: float) -> void:
 ## Get the general direction for general movement.
 func get_direction() -> Vector2:
 	if check_threshold():
-		var dir: Vector2 = knob.position - stick_center
+		var dir: Vector2 = knob.position - _stick_center
 		return dir.normalized()
 	return Vector2.ZERO
 
@@ -126,17 +126,17 @@ func get_direction_4() -> Vector2:
 	return Vector2.ZERO
 
 ## Get the angle for general movement.[br]
-## get_angle() is the same as [code](knob.position - stick_center).angle()[/code]
+## get_angle() is the same as [code](knob.position - _stick_center).angle()[/code]
 func get_angle() -> float:
 	if check_threshold():
-		var dir: Vector2 = knob.position - stick_center
+		var dir: Vector2 = knob.position - _stick_center
 		return dir.angle()
 	return angles_8.NONE
 
 ## Get the angle for 8 directional movement.
 func get_angle_8() -> int:
 	if check_threshold():
-		var dir: Vector2 = knob.position - stick_center
+		var dir: Vector2 = knob.position - _stick_center
 		var angle = snappedf(dir.angle(), PI/4) / (PI/4)
 		angle = wrapi(int(angle), 0, 8)
 		return angle
@@ -145,7 +145,7 @@ func get_angle_8() -> int:
 ## Get the angle for 4 directional movement.
 func get_angle_4() -> int:
 	if check_threshold():
-		var dir: Vector2 = knob.position - stick_center
+		var dir: Vector2 = knob.position - _stick_center
 		var angle = snappedf(dir.angle(), PI/2) / (PI/2)
 		angle = wrapi(int(angle), 0, 4)
 		return angle
@@ -153,14 +153,14 @@ func get_angle_4() -> int:
 
 ## Check if the knob's distance from the center is greater than the [code]threshold[/code].
 func check_threshold() -> bool:
-	return knob.position.distance_to(stick_center) > threshold
+	return knob.position.distance_to(_stick_center) > deadzone
 
 func _on_pressed() -> void:
-	pressing = true
+	_pressing = true
 
 func _on_released() -> void:
-	pressing = false
+	_pressing = false
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PAUSED and recenter_on_pause:
-		knob.position = stick_center
+		knob.position = _stick_center
