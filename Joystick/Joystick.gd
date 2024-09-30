@@ -34,7 +34,7 @@ enum angles_4 { ## Enum used for 4 directional movement.
 	UP = 3, ## Move UP.
 }
 
-@export var deadzone: float = 10 ## The knob's distance from the center must be greater than the [code]threshold[/code] before the direction and angle are updated.
+@export var deadzone: float = 10 ## The knob's distance from the center must be greater than the [code]deadzone[/code] before the direction and angle are updated.
 @export var recenter_on_pause: bool = true ## Recenters the knob when get_tree().paused = true.
 @export_category("Knob")
 @export var knob: Sprite2D ## The joystick's knob.
@@ -84,14 +84,14 @@ func _process(_delta: float) -> void:
 
 ## Get the general direction for general movement.
 func get_direction() -> Vector2:
-	if check_threshold():
+	if check_deadzone():
 		var dir: Vector2 = knob.position - _stick_center
 		return dir.normalized()
 	return Vector2.ZERO
 
 ## Get the direction for 8 directional movement.
 func get_direction_8() -> Vector2:
-	if check_threshold():
+	if check_deadzone():
 		match get_angle_8():
 			angles_8.UP:                            # angle = 6
 				return Vector2.UP
@@ -113,7 +113,7 @@ func get_direction_8() -> Vector2:
 
 ## Get the direction for 4 directional movement.
 func get_direction_4() -> Vector2:
-	if check_threshold():
+	if check_deadzone():
 		match get_angle_4():
 			angles_4.UP:                            # angle = 3
 				return Vector2.UP
@@ -128,14 +128,14 @@ func get_direction_4() -> Vector2:
 ## Get the angle for general movement.[br]
 ## get_angle() is the same as [code](knob.position - _stick_center).angle()[/code]
 func get_angle() -> float:
-	if check_threshold():
+	if check_deadzone():
 		var dir: Vector2 = knob.position - _stick_center
 		return dir.angle()
 	return angles_8.NONE
 
 ## Get the angle for 8 directional movement.
 func get_angle_8() -> int:
-	if check_threshold():
+	if check_deadzone():
 		var dir: Vector2 = knob.position - _stick_center
 		var angle = snappedf(dir.angle(), PI/4) / (PI/4)
 		angle = wrapi(int(angle), 0, 8)
@@ -144,15 +144,15 @@ func get_angle_8() -> int:
 
 ## Get the angle for 4 directional movement.
 func get_angle_4() -> int:
-	if check_threshold():
+	if check_deadzone():
 		var dir: Vector2 = knob.position - _stick_center
 		var angle = snappedf(dir.angle(), PI/2) / (PI/2)
 		angle = wrapi(int(angle), 0, 4)
 		return angle
 	return angles_4.NONE
 
-## Check if the knob's distance from the center is greater than the [code]threshold[/code].
-func check_threshold() -> bool:
+## Check if the knob's distance from the center is greater than the [code]deadzone[/code].
+func check_deadzone() -> bool:
 	return knob.position.distance_to(_stick_center) > deadzone
 
 func _on_pressed() -> void:
