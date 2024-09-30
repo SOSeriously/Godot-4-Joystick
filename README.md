@@ -46,5 +46,5 @@ Get the angle for 4 directional movement<br />
 get_angle()<br />
 Get the angle for general movement<br />
 
-check_threshold()<br />
-Check if the knob's distance from the center is greater than the threshold
+check_deadzone()<br />
+Check if the knob's distance from the center is greater than the deadzone
